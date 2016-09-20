@@ -10,7 +10,7 @@ include:
 unpack-confluence-tarball:
   archive.extracted:
     - name: {{ confluence.prefix }}
-    - source: {{ confluence.source_url }}/atlassian-confluence-software-{{ confluence.version }}.tar.gz
+    - source: {{ confluence.source_url }}/atlassian-confluence-{{ confluence.version }}.tar.gz
     - source_hash: {{ salt['pillar.get']('confluence:source_hash', '') }}
     - archive_format: tar
     - user: confluence

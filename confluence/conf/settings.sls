@@ -4,7 +4,7 @@
 
 {%- set default_version      = '6.4' %}
 {%- set default_prefix       = '/opt' %}
-{%- set default_source_url   = 'https://downloads.atlassian.com/software/confluence/downloads' %}
+{%- set default_source_url   = 'https://www.atlassian.com/software/confluence/downloads/binary/' %}
 {%- set default_dbdriver_url = 'https://dev.mysql.com/get/Downloads/Connector-J/' %}
 {%- set default_log_root     = '/var/log/confluence' %}
 {%- set default_confluence    = 'confluence' %}
