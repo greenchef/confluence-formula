@@ -1,19 +1,19 @@
 [Unit]
-Description=Jira Issue Tracker
+Description=Confluence Wiki
 After=network.target auditd.service
 
 [Service]
-Environment="JIRA_HOME={{ jira.home }}"
+Environment="CONFLUENCE_HOME={{ confluence.home }}"
 Environment="JAVA_HOME=/usr/lib/java"
-ExecStartPre=cd {{ jira.prefix }}/jira/logs
-ExecStart={{ jira.prefix }}/jira/bin/startup.sh
-ExecStop={{ jira.prefix }}/jira/bin/shutdown.sh
+ExecStartPre=cd {{ confluence.prefix }}/confluence/logs
+ExecStart={{ confluence.prefix }}/confluence/bin/startup.sh
+ExecStop={{ confluence.prefix }}/confluence/bin/shutdown.sh
 KillMode=process
 Restart=on-failure
 RestartPreventExitStatus=255
-PIDFile={{ jira.prefix }}/jira/work/catalina.pid
+PIDFile={{ confluence.prefix }}/confluence/work/catalina.pid
 Type=forking
 
 [Install]
 WantedBy=multi-user.target
-Alias=jira.service
+Alias=confluence.service

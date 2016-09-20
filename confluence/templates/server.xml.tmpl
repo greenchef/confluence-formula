@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-{%- from 'jira/conf/settings.sls' import jira with context %}
+{%- from 'confluence/conf/settings.sls' import confluence with context %}
 <!--
   Licensed to the Apache Software Foundation (ASF) under one or more
   contributor license agreements.  See the NOTICE file distributed with
@@ -53,16 +53,16 @@
                    clientAuth="false"
                    sslProtocol="TLS"
                    useBodyEncodingForURI="true"
-                   keyAlias="jira"
-                   keystoreFile="{{ jira.prefix }}/jira/jira.jks"
-                   keystorePass="{{ jira.jks_password }}"
+                   keyAlias="confluence"
+                   keystoreFile="{{ confluence.prefix }}/confluence/confluence.jks"
+                   keystorePass="{{ confluence.jks_password }}"
                    keystoreType="JKS"/>
 
 
         <Engine name="Catalina" defaultHost="localhost">
             <Host name="localhost" appBase="webapps" unpackWARs="true" autoDeploy="true">
 
-                <Context path="" docBase="${catalina.home}/atlassian-jira" reloadable="false" useHttpOnly="true">
+                <Context path="" docBase="${catalina.home}/atlassian-confluence" reloadable="false" useHttpOnly="true">
                     <Resource name="UserTransaction" auth="Container" type="javax.transaction.UserTransaction"
                               factory="org.objectweb.jotm.UserTransactionFactory" jotm.timeout="60"/>
                     <Manager pathname=""/>
@@ -71,7 +71,7 @@
             </Host>
 
             <Valve className="org.apache.catalina.valves.AccessLogValve"
-                   pattern="%a %{jira.request.id}r %{jira.request.username}r %t &quot;%m %U%q %H&quot; %s %b %D &quot;%{Referer}i&quot; &quot;%{User-Agent}i&quot; &quot;%{jira.request.assession.id}r&quot;"/>
+                   pattern="%a %{confluence.request.id}r %{confluence.request.username}r %t &quot;%m %U%q %H&quot; %s %b %D &quot;%{Referer}i&quot; &quot;%{User-Agent}i&quot; &quot;%{confluence.request.assession.id}r&quot;"/>
 
         </Engine>
     </Service>
