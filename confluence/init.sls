@@ -1,4 +1,4 @@
-{%- from 'jira/conf/settings.sls' import jira with context %}
+{%- from 'confluence/conf/settings.sls' import confluence with context %}
 
 include:
   - sun-java
@@ -7,176 +7,176 @@ include:
 #  - apache.mod_proxy_http
 
 ### APPLICATION INSTALL ###
-unpack-jira-tarball:
+unpack-confluence-tarball:
   archive.extracted:
-    - name: {{ jira.prefix }}
-    - source: {{ jira.source_url }}/atlassian-jira-software-{{ jira.version }}.tar.gz
-    - source_hash: {{ salt['pillar.get']('jira:source_hash', '') }}
+    - name: {{ confluence.prefix }}
+    - source: {{ confluence.source_url }}/atlassian-confluence-software-{{ confluence.version }}.tar.gz
+    - source_hash: {{ salt['pillar.get']('confluence:source_hash', '') }}
     - archive_format: tar
-    - user: jira
+    - user: confluence
     - tar_options: z
-    - if_missing: {{ jira.prefix }}/atlassian-jira-software-{{ jira.version }}-standalone
-    - runas: jira
+    - if_missing: {{ confluence.prefix }}/atlassian-confluence-software-{{ confluence.version }}-standalone
+    - runas: confluence
     - keep: True
     - require:
-      - module: jira-stop
-      - file: jira-init-script
-      - user: jira
+      - module: confluence-stop
+      - file: confluence-init-script
+      - user: confluence
     - listen_in:
-      - module: jira-restart
+      - module: confluence-restart
 
 unpack-dbdriver-tarball:
   archive.extracted:
-    - name: {{ jira.prefix }}/jira/mysql_driver/
-    - source: {{ jira.dbdriver_url }}/mysql-connector-java-{{ jira.dbdriver_version }}.tar.gz
-    - source_hash: {{ salt['pillar.get']('jira:dbdriver_hash', '') }}
+    - name: {{ confluence.prefix }}/confluence/mysql_driver/
+    - source: {{ confluence.dbdriver_url }}/mysql-connector-java-{{ confluence.dbdriver_version }}.tar.gz
+    - source_hash: {{ salt['pillar.get']('confluence:dbdriver_hash', '') }}
     - archive_format: tar
-    - user: jira
+    - user: confluence
     - tar_options: z
     - keep: True
     - require:
-      - module: jira-stop
-      - file: jira-init-script
-      - user: jira
+      - module: confluence-stop
+      - file: confluence-init-script
+      - user: confluence
     - listen_in:
-      - module: jira-restart
+      - module: confluence-restart
 
-fix-jira-filesystem-permissions:
+fix-confluence-filesystem-permissions:
   file.directory:
-    - user: jira
+    - user: confluence
     - recurse:
       - user
     - names:
-      - {{ jira.prefix }}/atlassian-jira-software-{{ jira.version }}-standalone
-      - {{ jira.home }}
-      - {{ jira.log_root }}
+      - {{ confluence.prefix }}/atlassian-confluence-software-{{ confluence.version }}-standalone
+      - {{ confluence.home }}
+      - {{ confluence.log_root }}
     - watch:
-      - archive: unpack-jira-tarball
+      - archive: unpack-confluence-tarball
       - archive: unpack-dbdriver-tarball
 
-create-jira-symlink:
+create-confluence-symlink:
   file.symlink:
-    - name: {{ jira.prefix }}/jira
-    - target: {{ jira.prefix }}/atlassian-jira-software-{{ jira.version }}-standalone
-    - user: jira
+    - name: {{ confluence.prefix }}/confluence
+    - target: {{ confluence.prefix }}/atlassian-confluence-software-{{ confluence.version }}-standalone
+    - user: confluence
     - watch:
-      - archive: unpack-jira-tarball
+      - archive: unpack-confluence-tarball
       - archive: unpack-dbdriver-tarball
 
 create-logs-symlink:
   file.symlink:
-    - name: {{ jira.prefix }}/jira/logs
-    - target: {{ jira.log_root }}
-    - user: jira
-    - backupname: {{ jira.prefix }}/jira/old_logs
+    - name: {{ confluence.prefix }}/confluence/logs
+    - target: {{ confluence.log_root }}
+    - user: confluence
+    - backupname: {{ confluence.prefix }}/confluence/old_logs
     - watch:
-      - archive: unpack-jira-tarball
+      - archive: unpack-confluence-tarball
       - archive: unpack-dbdriver-tarball
 
 ### SERVICE ###
-jira-service:
+confluence-service:
   service.running:
-    - name: jira
+    - name: confluence
     - enable: True
     - require:
-      - archive: unpack-jira-tarball
+      - archive: unpack-confluence-tarball
       - archive: unpack-dbdriver-tarball
-      - file: jira-init-script
+      - file: confluence-init-script
 
 # used to trigger restarts by other states
-jira-restart:
+confluence-restart:
   module.wait:
     - name: service.restart
-    - m_name: jira
+    - m_name: confluence
 
-jira-stop:
+confluence-stop:
   module.wait:
     - name: service.stop
-    - m_name: jira  
+    - m_name: confluence
 
-jira-init-script:
+confluence-init-script:
   file.managed:
-    - name: '/lib/systemd/system/jira.service'
-    - source: salt://jira/templates/jira.systemd.tmpl
+    - name: '/lib/systemd/system/confluence.service'
+    - source: salt://confluence/templates/confluence.systemd.tmpl
     - user: root
     - group: root
     - mode: 0644
     - template: jinja
     - context:
-      jira: {{ jira|json }}
+      confluence: {{ confluence|json }}
 
-create-jira-service-symlink:
+create-confluence-service-symlink:
   file.symlink:
-    - name: '/etc/systemd/system/jira.service'
-    - target: '/lib/systemd/system/jira.service'
+    - name: '/etc/systemd/system/confluence.service'
+    - target: '/lib/systemd/system/confluence.service'
     - user: root
     - watch:
-      - file: jira-init-script
+      - file: confluence-init-script
 
-jira:
+confluence:
   user.present
 
 ### FILES ###
-{{ jira.home }}/jira-config.properties:
+{{ confluence.home }}/confluence-config.properties:
   file.managed:
-    - source: salt://jira/templates/jira-config.properties.tmpl
-    - user: {{ jira.user }}
+    - source: salt://confluence/templates/confluence-config.properties.tmpl
+    - user: {{ confluence.user }}
     - template: jinja
     - listen_in:
-      - module: jira-restart
+      - module: confluence-restart
 
-{{ jira.home }}/dbconfig.xml:
+{{ confluence.home }}/dbconfig.xml:
   file.managed:
-    - source: salt://jira/templates/dbconfig.xml.tmpl
-    - user: {{ jira.user }}
+    - source: salt://confluence/templates/dbconfig.xml.tmpl
+    - user: {{ confluence.user }}
     - template: jinja
     - listen_in:
-      - module: jira-restart
+      - module: confluence-restart
 
-{{ jira.prefix }}/jira/conf/server.xml:
+{{ confluence.prefix }}/confluence/conf/server.xml:
   file.managed:
-    - source: salt://jira/templates/server.xml.tmpl
-    - user: {{ jira.user }}
+    - source: salt://confluence/templates/server.xml.tmpl
+    - user: {{ confluence.user }}
     - template: jinja
     - listen_in:
-      - module: jira-restart
+      - module: confluence-restart
 
-{{ jira.prefix }}/jira/jira.jks:
+{{ confluence.prefix }}/confluence/confluence.jks:
   file.managed:
-    - source: salt://salt/files/jira.jks
-    - user: {{ jira.user }}
+    - source: salt://salt/files/confluence.jks
+    - user: {{ confluence.user }}
     - listen_in:
-      - module: jira-restart
+      - module: confluence-restart
 
-{{ jira.prefix }}/jira/atlassian-jira/WEB-INF/classes/jira-application.properties:
+{{ confluence.prefix }}/confluence/atlassian-confluence/WEB-INF/classes/confluence-application.properties:
   file.managed:
-    - source: salt://jira/templates/jira-application.properties.tmpl
-    - user: {{ jira.user }}
+    - source: salt://confluence/templates/confluence-application.properties.tmpl
+    - user: {{ confluence.user }}
     - template: jinja
     - listen_in:
-      - module: jira-restart
+      - module: confluence-restart
 
-{{ jira.prefix }}/jira/bin/setenv.sh:
+{{ confluence.prefix }}/confluence/bin/setenv.sh:
   file.managed:
-    - source: salt://jira/templates/setenv.sh.tmpl
-    - user: {{ jira.user }}
+    - source: salt://confluence/templates/setenv.sh.tmpl
+    - user: {{ confluence.user }}
     - template: jinja
     - mode: 0644
     - listen_in:
-      - module: jira-restart
+      - module: confluence-restart
 
-# {{ jira.prefix }}/jira/conf/logging.properties:
+# {{ confluence.prefix }}/confluence/conf/logging.properties:
 #   file.managed:
-#     - source: salt://jira/templates/logging.properties.tmpl
-#     - user: {{ jira.user }}
+#     - source: salt://confluence/templates/logging.properties.tmpl
+#     - user: {{ confluence.user }}
 #     - template: jinja
 #     - watch_in:
-#       - module: jira-restart
+#       - module: confluence-restart
 
-{{ jira.prefix }}/jira/lib/mysql-connector-java-{{ jira.dbdriver_version }}-bin.jar:
+{{ confluence.prefix }}/confluence/lib/mysql-connector-java-{{ confluence.dbdriver_version }}-bin.jar:
   file.managed:
-    - source: {{ jira.prefix }}/jira/mysql_driver/mysql-connector-java-{{ jira.dbdriver_version }}/mysql-connector-java-{{ jira.dbdriver_version }}-bin.jar
-    - user: {{ jira.user }}
+    - source: {{ confluence.prefix }}/confluence/mysql_driver/mysql-connector-java-{{ confluence.dbdriver_version }}/mysql-connector-java-{{ confluence.dbdriver_version }}-bin.jar
+    - user: {{ confluence.user }}
     - watch_in:
-      - module: jira-restart
+      - module: confluence-restart
 

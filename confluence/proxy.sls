@@ -1,4 +1,4 @@
-{%- from 'jira/conf/settings.sls' import jira with context %}
+{%- from 'confluence/conf/settings.sls' import confluence with context %}
 
 
 apache:
@@ -21,10 +21,10 @@ apache-reload:
     - name: service.reload
     - m_name: apache2
 
-jira-vhost:
+confluence-vhost:
   file.managed:
-    - name: /etc/apache2/sites-available/jira
-    - source: salt://jira/templates/jira-vhost.tmpl
+    - name: /etc/apache2/sites-available/confluence
+    - source: salt://confluence/templates/confluence-vhost.tmpl
 
 disable-default-site:
   file.absent:
@@ -32,16 +32,16 @@ disable-default-site:
     - listen_in:
       - module: apache-reload
     - require:
-      - file: enable-jira-site
+      - file: enable-confluence-site
 
-enable-jira-site:
+enable-confluence-site:
   file.symlink:
-    - name: /etc/apache2/sites-enabled/jira
-    - target: /etc/apache2/sites-available/jira
+    - name: /etc/apache2/sites-enabled/confluence
+    - target: /etc/apache2/sites-available/confluence
     - listen_in:
       - module: apache-reload
     - require:
-      - file: jira-vhost
+      - file: confluence-vhost
  
 a2enmod proxy:
   cmd.wait:
