@@ -50,6 +50,7 @@ fix-confluence-filesystem-permissions:
       - {{ confluence.prefix }}/atlassian-confluence-software-{{ confluence.version }}-standalone
       - {{ confluence.home }}
       - {{ confluence.log_root }}
+      - {{ confluence.attachments_root }}
     - watch:
       - archive: unpack-confluence-tarball
       - archive: unpack-dbdriver-tarball
@@ -69,6 +70,15 @@ create-logs-symlink:
     - target: {{ confluence.log_root }}
     - user: confluence
     - backupname: {{ confluence.prefix }}/confluence/old_logs
+    - watch:
+      - archive: unpack-confluence-tarball
+      - archive: unpack-dbdriver-tarball
+
+create-attachments-symlink:
+  file.symlink:
+    - name: /var/atlassian/application-data/confluence/attachments
+    - target: {{ confluence.attachments_root }}
+    - user: confluence
     - watch:
       - archive: unpack-confluence-tarball
       - archive: unpack-dbdriver-tarball

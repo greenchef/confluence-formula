@@ -7,6 +7,7 @@
 {%- set default_source_url   = 'https://www.atlassian.com/software/confluence/downloads/binary/' %}
 {%- set default_dbdriver_url = 'https://dev.mysql.com/get/Downloads/Connector-J/' %}
 {%- set default_log_root     = '/var/log/confluence' %}
+{%- set default_attachments_root = '/mnt/attachments' %}
 {%- set default_confluence_user    = 'confluence' %}
 {%- set default_db_server    = 'localhost' %}
 {%- set default_db_name      = 'confluence' %}
@@ -22,6 +23,7 @@
 {%- set source_url     = g.get('source_url', p.get('source_url', default_source_url)) %}
 {%- set dbdriver_url   = g.get('dbdriver_url', p.get('dbdriver_url', default_dbdriver_url)) %}
 {%- set log_root       = g.get('log_root', p.get('log_root', default_log_root)) %}
+{%- set attachments_root = g.get('attachments_root', p.get('attachments_root', default_attachments_root)) %}
 {%- set prefix         = g.get('prefix', p.get('prefix', default_prefix)) %}
 {%- set confluence_user = g.get('user', p.get('user', default_confluence_user)) %}
 {%- set db_server      = g.get('db_server', p.get('db_server', default_db_server)) %}
@@ -42,6 +44,7 @@
                       'dbdriver_url'   : dbdriver_url,
                       'dbdriver_version': dbdriver_version,
                       'log_root'       : log_root,
+                      'attachments_root' : attachments_root,
                       'home'           : confluence_home,
                       'prefix'         : prefix,
                       'user'           : confluence_user,
