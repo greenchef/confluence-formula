@@ -117,22 +117,6 @@ confluence:
   user.present
 
 ### FILES ###
-{{ confluence.home }}/confluence-config.properties:
-  file.managed:
-    - source: salt://confluence/templates/confluence-config.properties.tmpl
-    - user: {{ confluence.user }}
-    - template: jinja
-    - listen_in:
-      - module: confluence-restart
-
-{{ confluence.home }}/dbconfig.xml:
-  file.managed:
-    - source: salt://confluence/templates/dbconfig.xml.tmpl
-    - user: {{ confluence.user }}
-    - template: jinja
-    - listen_in:
-      - module: confluence-restart
-
 {{ confluence.prefix }}/confluence/conf/server.xml:
   file.managed:
     - source: salt://confluence/templates/server.xml.tmpl
@@ -148,14 +132,6 @@ confluence:
     - listen_in:
       - module: confluence-restart
 
-{{ confluence.prefix }}/confluence/atlassian-confluence/WEB-INF/classes/confluence-application.properties:
-  file.managed:
-    - source: salt://confluence/templates/confluence-application.properties.tmpl
-    - user: {{ confluence.user }}
-    - template: jinja
-    - listen_in:
-      - module: confluence-restart
-
 {{ confluence.prefix }}/confluence/bin/setenv.sh:
   file.managed:
     - source: salt://confluence/templates/setenv.sh.tmpl
@@ -164,14 +140,6 @@ confluence:
     - mode: 0644
     - listen_in:
       - module: confluence-restart
-
-# {{ confluence.prefix }}/confluence/conf/logging.properties:
-#   file.managed:
-#     - source: salt://confluence/templates/logging.properties.tmpl
-#     - user: {{ confluence.user }}
-#     - template: jinja
-#     - watch_in:
-#       - module: confluence-restart
 
 {{ confluence.prefix }}/confluence/lib/mysql-connector-java-{{ confluence.dbdriver_version }}-bin.jar:
   file.managed:

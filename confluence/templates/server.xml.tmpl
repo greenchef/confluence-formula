@@ -16,16 +16,10 @@
   See the License for the specific language governing permissions and
   limitations under the License.
 -->
-<Server port="8005" shutdown="SHUTDOWN">
-    <Listener className="org.apache.catalina.startup.VersionLoggerListener" />
-    <Listener className="org.apache.catalina.core.AprLifecycleListener" SSLEngine="on" />
-    <Listener className="org.apache.catalina.core.JreMemoryLeakPreventionListener" />
-    <Listener className="org.apache.catalina.mbeans.GlobalResourcesLifecycleListener" />
-    <Listener className="org.apache.catalina.core.ThreadLocalLeakPreventionListener" />
+<Server port="8000" shutdown="SHUTDOWN">
+    <Service name="Tomcat-Standalone">
 
-    <Service name="Catalina">
-
-        <Connector port="8080"
+        <Connector port="8090"
 
                    maxThreads="150"
                    minSpareThreads="25"
@@ -38,6 +32,16 @@
                    redirectPort="8443"
                    acceptCount="100"
                    disableUploadTimeout="true"/>
+
+        <Engine name="Standalone" defaultHost="localhost" debug="0">
+            <Host name="localhost" debug="0" appBase="webapps" unpackWARs="true" autoDeploy="false">
+                <Context path="" docBase="{{ catalina.home }}/atlassian-confluence" debug="0" reloadable="false" useHttpOnly="true">
+                    <!-- Logger is deprecated in Tomcat 5.5. Logging configuration for Confluence is specified in confluence/WEB-INF/classes/log4j.properties -->
+                    <Manager pathname="" />
+                    <Valve className="org.apache.catalina.valves.StuckThreadDetectionValve" threshold="60" />
+                </Context>
+            </Host>
+        </Engine>
 
         <Connector port="443"
                    protocol="org.apache.coyote.http11.Http11Protocol"
@@ -58,21 +62,5 @@
                    keystorePass="{{ confluence.jks_password }}"
                    keystoreType="JKS"/>
 
-
-        <Engine name="Catalina" defaultHost="localhost">
-            <Host name="localhost" appBase="webapps" unpackWARs="true" autoDeploy="true">
-
-                <Context path="" docBase="${catalina.home}/atlassian-confluence" reloadable="false" useHttpOnly="true">
-                    <Resource name="UserTransaction" auth="Container" type="javax.transaction.UserTransaction"
-                              factory="org.objectweb.jotm.UserTransactionFactory" jotm.timeout="60"/>
-                    <Manager pathname=""/>
-                </Context>
-
-            </Host>
-
-            <Valve className="org.apache.catalina.valves.AccessLogValve"
-                   pattern="%a %{confluence.request.id}r %{confluence.request.username}r %t &quot;%m %U%q %H&quot; %s %b %D &quot;%{Referer}i&quot; &quot;%{User-Agent}i&quot; &quot;%{confluence.request.assession.id}r&quot;"/>
-
-        </Engine>
     </Service>
 </Server>
