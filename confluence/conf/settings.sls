@@ -7,7 +7,7 @@
 {%- set default_source_url   = 'https://www.atlassian.com/software/confluence/downloads/binary/' %}
 {%- set default_dbdriver_url = 'https://dev.mysql.com/get/Downloads/Connector-J/' %}
 {%- set default_log_root     = '/var/log/confluence' %}
-{%- set default_confluence    = 'confluence' %}
+{%- set default_confluence_user    = 'confluence' %}
 {%- set default_db_server    = 'localhost' %}
 {%- set default_db_name      = 'confluence' %}
 {%- set default_db_username  = 'confluence' %}
@@ -23,7 +23,7 @@
 {%- set dbdriver_url   = g.get('dbdriver_url', p.get('dbdriver_url', default_dbdriver_url)) %}
 {%- set log_root       = g.get('log_root', p.get('log_root', default_log_root)) %}
 {%- set prefix         = g.get('prefix', p.get('prefix', default_prefix)) %}
-{%- set confluence      = g.get('user', p.get('user', default_confluence)) %}
+{%- set confluence_user = g.get('user', p.get('user', default_confluence_user)) %}
 {%- set db_server      = g.get('db_server', p.get('db_server', default_db_server)) %}
 {%- set db_name        = g.get('db_name', p.get('db_name', default_db_name)) %}
 {%- set db_username    = g.get('db_username', p.get('db_username', default_db_username)) %}
@@ -34,7 +34,7 @@
 {%- set jvm_MaxPermSize = g.get('jvm_MaxPermSize', p.get('jvm_MaxPermSize', default_jvm_MaxPermSize)) %}
 
 
-{%- set confluence_home  = salt['pillar.get']('users:%s:home' % confluence, '/home/confluence') %}
+{%- set confluence_home  = salt['pillar.get']('users:%s:home' % confluence_user, '/home/confluence') %}
 
 {%- set confluence = {} %}
 {%- do confluence.update( { 'version'        : version,
