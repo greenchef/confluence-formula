@@ -34,7 +34,7 @@
 {%- set jvm_MaxPermSize = g.get('jvm_MaxPermSize', p.get('jvm_MaxPermSize', default_jvm_MaxPermSize)) %}
 
 
-{%- set confluence      = salt['pillar.get']('users:%s:home' % confluence, '/home/confluence') %}
+{%- set confluence_home  = salt['pillar.get']('users:%s:home' % confluence, '/home/confluence') %}
 
 {%- set confluence = {} %}
 {%- do confluence.update( { 'version'        : version,
