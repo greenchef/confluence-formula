@@ -163,8 +163,8 @@ confluence:
     - user: {{ confluence.user }}
     - formatter: json
     - dataset:
-      "api.version": "v1"
-      source:
-        - sourceType: LocalFile
-          name: Confluence
-          pathExpression: "{{ confluence.prefix }}/confluence/logs/catalina.out"
+        "api.version": "v1"
+        source:
+          - sourceType: LocalFile
+            name: Confluence
+            pathExpression: "{{ confluence.prefix }}/confluence/logs/catalina.out"
