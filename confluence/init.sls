@@ -158,3 +158,13 @@ confluence:
     - watch_in:
       - module: confluence-restart
 
+/opt/sumologic/sumocollector/sources/confluence.json:
+  file.serialize:
+    - user: {{ confluence.user }}
+    - formatter: json
+    - dataset:
+      "api.version": "v1"
+      source:
+        - sourceType: LocalFile
+          name: Confluence
+          pathExpression: "{{ confluence.prefix }}/confluence/logs/catalina.out"
