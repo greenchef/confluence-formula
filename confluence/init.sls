@@ -165,6 +165,6 @@ confluence:
     - dataset:
         "api.version": "v1"
         source:
-          - sourceType: LocalFile
-            name: Confluence
-            pathExpression: "{{ confluence.prefix }}/confluence/logs/catalina.out"
+          sourceType: LocalFile
+          name: Confluence
+          pathExpression: "{{ confluence.prefix }}/confluence/logs/catalina.out"
