@@ -62,17 +62,6 @@ create-confluence-symlink:
     - user: confluence
     - watch:
       - archive: unpack-confluence-tarball
-      - archive: unpack-dbdriver-tarball
-
-create-logs-symlink:
-  file.symlink:
-    - name: {{ confluence.prefix }}/confluence/logs
-    - target: {{ confluence.log_root }}
-    - user: confluence
-    - backupname: {{ confluence.prefix }}/confluence/old_logs
-    - watch:
-      - archive: unpack-confluence-tarball
-      - archive: unpack-dbdriver-tarball
 
 create-attachments-symlink:
   file.symlink:
