@@ -129,6 +129,8 @@ confluence:
     - source: salt://confluence/templates/confluence-init.properties.tmpl
     - user: {{ confluence.user }}
     - template: jinja
+    - context:
+      confluence: {{ confluence|json }}
     - listen_in:
       - module: confluence-restart
 
@@ -161,6 +163,8 @@ confluence:
     - user: root
     - template: jinja
     - mode: 0644
+    - context:
+      confluence: {{ confluence|json }}
 
 /opt/sumologic/sumocollector/sources/confluence.json:
   file.serialize:
