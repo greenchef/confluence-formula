@@ -124,6 +124,14 @@ confluence:
     - listen_in:
       - module: confluence-restart
 
+{{ confluence.prefix }}/confluence/confluence/WEB-INF/classes/confluence-init.properties:
+  file.managed:
+    - source: salt://confluence/templates/confluence-init.properties.tmpl
+    - user: {{ confluence.user }}
+    - template: jinja
+    - listen_in:
+      - module: confluence-restart
+
 {{ confluence.prefix }}/confluence/confluence.jks:
   file.managed:
     - source: salt://salt/files/confluence.jks
@@ -146,6 +154,13 @@ confluence:
     - user: {{ confluence.user }}
     - watch_in:
       - module: confluence-restart
+
+/etc/fstab:
+  file.managed:
+    - source: salt://confluence/templates/fstab.tmpl
+    - user: root
+    - template: jinja
+    - mode: 0644
 
 /opt/sumologic/sumocollector/sources/confluence.json:
   file.serialize:
