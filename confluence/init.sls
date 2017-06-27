@@ -176,3 +176,20 @@ confluence:
           sourceType: LocalFile
           name: Confluence
           pathExpression: "{{ confluence.prefix }}/confluence/logs/catalina.out"
+
+# Get the cluster
+{% set cluster = salt['grains.get']('ec2_tags:cluster') %}
+{% if salt['grains.get']('ec2_tags:cluster') == 'production' %}
+  {% set cluster = 'prod' %}
+{% elif salt['grains.get']('ec2_tags:cluster') == 'devtools' %}
+  {% set cluster = 'dev' %}
+{% endif %}
+
+# Get the application
+{% set app = salt['grains.get']('ec2_tags:application') %}
+{% if salt['grains.get']('ec2_tags:application') == 'mongodb' %}
+  {% set app = 'cluster/mongo' %}
+{% endif %}
+
+          # Set the sourceCategory
+          sourceCategory: "{{cluster}}/{{app}}/confluence"
