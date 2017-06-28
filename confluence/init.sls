@@ -192,4 +192,4 @@ confluence:
 {% endif %}
 
           # Set the sourceCategory
-          sourceCategory: "{{cluster}}/{{app}}/confluence"
+          category: "{{cluster}}/{{app}}/confluence"
