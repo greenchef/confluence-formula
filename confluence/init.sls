@@ -115,6 +115,10 @@ create-confluence-service-symlink:
 confluence:
   user.present
 
+fs.file-max:
+  sysctl.present:
+    - value: 2000000
+
 ### FILES ###
 {{ confluence.prefix }}/confluence/conf/server.xml:
   file.managed:
