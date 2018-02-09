@@ -25,6 +25,14 @@ unpack-confluence-tarball:
     - listen_in:
       - module: confluence-restart
 
+create-confluence-symlink:
+  file.symlink:
+    - name: {{ confluence.prefix }}/confluence
+    - target: {{ confluence.prefix }}/atlassian-confluence-{{ confluence.version }}
+    - user: confluence
+    - watch:
+      - archive: unpack-confluence-tarball
+
 unpack-dbdriver-tarball:
   archive.extracted:
     - name: {{ confluence.prefix }}/confluence/mysql_driver/
@@ -38,6 +46,9 @@ unpack-dbdriver-tarball:
       - module: confluence-stop
       - file: confluence-init-script
       - user: confluence
+      - file: create-confluence-symlink
+    - watch:
+      - file: create-confluence-symlink
     - listen_in:
       - module: confluence-restart
 
@@ -54,14 +65,6 @@ fix-confluence-filesystem-permissions:
     - watch:
       - archive: unpack-confluence-tarball
       - archive: unpack-dbdriver-tarball
-
-create-confluence-symlink:
-  file.symlink:
-    - name: {{ confluence.prefix }}/confluence
-    - target: {{ confluence.prefix }}/atlassian-confluence-{{ confluence.version }}
-    - user: confluence
-    - watch:
-      - archive: unpack-confluence-tarball
 
 create-attachments-symlink:
   file.symlink:
