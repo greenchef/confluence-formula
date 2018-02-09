@@ -15,7 +15,7 @@ unpack-confluence-tarball:
     - archive_format: tar
     - user: confluence
     - tar_options: z
-    - if_missing: {{ confluence.prefix }}/atlassian-confluence-software-{{ confluence.version }}
+    - if_missing: {{ confluence.prefix }}/atlassian-confluence-{{ confluence.version }}
     - runas: confluence
     - keep: True
     - require:
@@ -47,7 +47,7 @@ fix-confluence-filesystem-permissions:
     - recurse:
       - user
     - names:
-      - {{ confluence.prefix }}/atlassian-confluence-software-{{ confluence.version }}
+      - {{ confluence.prefix }}/atlassian-confluence-{{ confluence.version }}
       - {{ confluence.home }}
       - {{ confluence.log_root }}
       - {{ confluence.attachments_root }}
@@ -58,7 +58,7 @@ fix-confluence-filesystem-permissions:
 create-confluence-symlink:
   file.symlink:
     - name: {{ confluence.prefix }}/confluence
-    - target: {{ confluence.prefix }}/atlassian-confluence-software-{{ confluence.version }}
+    - target: {{ confluence.prefix }}/atlassian-confluence-{{ confluence.version }}
     - user: confluence
     - watch:
       - archive: unpack-confluence-tarball
