@@ -15,6 +15,7 @@ unpack-confluence-tarball:
     - archive_format: tar
     - user: confluence
     - tar_options: z
+    - unless: ps aux | grep confluence | grep -v grep
     - if_missing: {{ confluence.prefix }}/atlassian-confluence-{{ confluence.version }}
     - runas: confluence
     - keep: True
