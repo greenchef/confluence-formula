@@ -23,7 +23,7 @@ JVM_REQUIRED_ARGS='-Djava.awt.headless=true -Datlassian.standalone=CONFLUENCE -D
 # Uncomment this setting if you want to import data without notifications
 #
 #DISABLE_NOTIFICATIONS=" -Datlassian.mail.senddisabled=true -Datlassian.mail.fetchdisabled=true -Datlassian.mail.popdisabled=true"
-
+ulimit -n {{ confluence.ulimit }}
 
 #-----------------------------------------------------------------------------------
 #

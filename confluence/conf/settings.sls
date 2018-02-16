@@ -19,6 +19,7 @@
 {%- set default_jvm_MaxPermSize = '384m' %}
 {%- set default_efs_home = 'localhost' %}
 {%- set default_efs_opt = 'localhost' %}
+{%- set default_ulimit = '8192' %}
 
 {%- set version        = g.get('version', p.get('version', default_version)) %}
 {%- set dbdriver_version = g.get('dbdriver_version', p.get('dbdriver_version', default_version)) %}
@@ -38,7 +39,7 @@
 {%- set jvm_MaxPermSize = g.get('jvm_MaxPermSize', p.get('jvm_MaxPermSize', default_jvm_MaxPermSize)) %}
 {%- set efs_home       = g.get('efs_home', p.get('efs_home', default_efs_home)) %}
 {%- set efs_opt        = g.get('efs_opt', p.get('efs_opt', default_efs_opt)) %}
-
+{%- set ulimit         = g.get('ulimit', p.get('ulimit', default_ulimit)) %}
 
 {%- set confluence_home  = salt['pillar.get']('users:%s:home' % confluence_user, '/home/confluence') %}
 
@@ -62,5 +63,6 @@
                       'jvm_MaxPermSize': jvm_MaxPermSize,
                       'efs_home'       : efs_home,
                       'efs_opt'        : efs_opt,
+                      'ulimit'         : ulimit
                   }) %}
 
